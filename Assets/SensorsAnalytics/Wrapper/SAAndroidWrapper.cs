@@ -32,6 +32,8 @@ namespace SensorsAnalytics.Wrapper
             AndroidJavaObject currentContext = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
             AndroidJavaObject configObj = new AndroidJavaObject("com.sensorsdata.analytics.android.sdk.SAConfigOptions", serverUrl);
             configObj.Call<AndroidJavaObject>("setAutoTrackEventType", autoTrackType);
+            // disable get device id
+            configObj.Call<AndroidJavaObject>("disableDeviceId");
             if (enableLog)
             {
                 configObj.Call<AndroidJavaObject>("enableLog", true);
@@ -40,6 +42,8 @@ namespace SensorsAnalytics.Wrapper
             //configObj.Call<AndroidJavaObject>("appendColdStart", currentContext);
             sensorsDataAPIClass.CallStatic("startWithConfigOptions", currentContext, configObj);
             apiInstance = sensorsDataAPIClass.CallStatic<AndroidJavaObject>("sharedInstance");
+
+            SALog.Debug("[SAAndroidWrapper] SensorsData Init");
         }
 
         private void _flush()

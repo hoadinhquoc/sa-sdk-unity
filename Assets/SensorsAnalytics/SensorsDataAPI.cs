@@ -36,7 +36,7 @@ namespace SensorsAnalytics
 
     public class SensorsDataAPI : MonoBehaviour
     {
-        public readonly static string ANDROID_VERSION = "4.4.3";
+        public readonly static string ANDROID_VERSION = "6.5.0";
         public readonly static string IOS_VERSION = "2.1.17";
         public readonly static string UNITY_VERSION = "1.0.3";
         /// <summary>
@@ -47,7 +47,7 @@ namespace SensorsAnalytics
         [HideInInspector]
         public string serverUrl = "请输入数据接收地址...";
         [HideInInspector]
-        public bool isEnableLog = false;
+        public bool isEnableLog = true;
 
         [HideInInspector]
         public int autoTrackType = 1 | 1 << 1;
