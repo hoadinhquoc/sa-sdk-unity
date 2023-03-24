@@ -35,7 +35,7 @@ namespace SensorsAnalytics.Wrapper
         {
             this.serverUrl = serverUrl;
             this.enableLog = enableLog;
-            this.autoTrackType = 0;
+            this.autoTrackType = autoTrackType;
             this.networkType = networkType;
             SALog.IsLogEnalbe(enableLog);
             SALog.Debug("Unity Config=======init serverUrl:" + serverUrl + ", enableLog:" + enableLog

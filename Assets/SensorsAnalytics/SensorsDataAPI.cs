@@ -50,21 +50,45 @@ namespace SensorsAnalytics
         public bool isEnableLog = true;
 
         [HideInInspector]
-        public int autoTrackType = 1 | 1 << 1;
+        public int autoTrackType = 0;
         [HideInInspector]
         public int networkType = 1 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4;
 
 
         #region internal use
+        [SerializeField] bool initAutomatically = false;
+
+        [Header("Auto track event type:")]
+        [SerializeField] bool useAppStart;
+        [SerializeField] bool useAppEnd;
+        [SerializeField] bool useAppClick;
+        [SerializeField] bool useAppViewScreen;
 
         private static SensorsDataAPI saInstance;
         private static ReaderWriterLockSlim lockObj = new ReaderWriterLockSlim();
         private static SensorsAnalyticsWrapper analyticsWrapper;
         private static volatile bool isFirstEvent = true;
 
+        private int SensorsAnalyticsEventTypeAppStart => useAppStart ? 1 : 0;
+        private int SensorsAnalyticsEventTypeAppEnd => useAppEnd ? 1 << 1 : 0;
+        private int SensorsAnalyticsEventTypeAppClick => useAppClick ? 1 << 2 : 0;
+        private int SensorsAnalyticsEventTypeAppViewScreen => useAppViewScreen ? 1 << 3 : 0;
+
         void Awake()
         {
+            if (!initAutomatically)
+                return;
+            
+            DelayInit();
+        }
+        #endregion
+
+        public void DelayInit()
+        {
+            // enable debug log
+            SALog.IsLogEnalbe(true);
             SALog.Debug("sensorsdataapi awake.");
+
             if (saInstance == null)
             {
                 DontDestroyOnLoad(gameObject);
@@ -75,21 +99,11 @@ namespace SensorsAnalytics
                 Destroy(gameObject);
                 return;
             }
+
+            autoTrackType = SensorsAnalyticsEventTypeAppStart | SensorsAnalyticsEventTypeAppEnd | SensorsAnalyticsEventTypeAppClick | SensorsAnalyticsEventTypeAppViewScreen;
             analyticsWrapper = new SensorsAnalyticsWrapper(serverUrl, isEnableLog, autoTrackType, networkType);
-        }
-        #endregion
-
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            
+            SALog.Debug($"sensorsdataapi Awake with auto track type: {autoTrackType}, network type: {networkType}");
         }
 
         /// <summary>
